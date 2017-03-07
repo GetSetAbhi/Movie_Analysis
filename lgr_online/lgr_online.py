@@ -1,29 +1,15 @@
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-import re
-import cleaner
 from sklearn.linear_model import SGDClassifier
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.externals import joblib
-import numpy as np 
-import os
+import numpy as np
 import pyprind
+import sys
+import os
+sys.path.append(os.path.dirname(os.getcwd()))
+from token_proc import tokenizer, preprocessor
 import sample_reviews as reviews
 
 root_path = os.getcwd()
-# Loads the stopwords
-stop_words = stopwords.words('english')
-lemmatizer = WordNetLemmatizer()
-
-def tokenizer(text):
-	tokenized = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
-	return tokenized
-
-def preprocessor(text):
-	text = re.sub('<[^>]*>', '', text).lower()
-	text = cleaner.expandContractions(text)
-	text = re.sub('[\W]+', ' ', text.lower())
-	return text
 
 # reads in and returns one document at a time:
 def stream_docs(path):

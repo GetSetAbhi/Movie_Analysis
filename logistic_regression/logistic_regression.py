@@ -1,16 +1,13 @@
 import pandas as pd
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-import re
-import cleaner
-import pickle
 from sklearn.externals import joblib
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np 
+import sys
 import os
-#from sample_reviews import negative_review as review
+sys.path.append(os.path.dirname(os.getcwd()))
+from token_proc import tokenizer, preprocessor
 import sample_reviews as reviews
 
 
@@ -18,20 +15,6 @@ path = os.getcwd()
 df = pd.DataFrame()
 
 df = pd.read_csv(os.path.dirname(path) + '/cleaned_data.csv')
-
-stop_words = stopwords.words('english')
-lemmatizer = WordNetLemmatizer()
-
-def tokenizer(text):
-	tokenized = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
-	return tokenized
-
-def preprocessor(text):
-	text = re.sub('<[^>]*>', '', text).lower()
-	text = cleaner.expandContractions(text)
-	text = re.sub('[\W]+', ' ', text.lower())
-	return text
-
 
 SPLIT_PERC = 0.80
 total_data = df.shape[0]

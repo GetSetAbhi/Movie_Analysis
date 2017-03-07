@@ -1,29 +1,16 @@
 import numpy as np 
-from nltk.corpus import stopwords
-import os
-import re
-import cleaner
+from sklearn.externals import joblib
 from sklearn.feature_extraction.text import HashingVectorizer
 from sklearn.naive_bayes import BernoulliNB
 import pyprind
-from nltk.stem import WordNetLemmatizer
+import sys
+import os
+sys.path.append(os.path.dirname(os.getcwd()))
+from token_proc import tokenizer, preprocessor
 import sample_reviews as reviews
-from sklearn.externals import joblib
 
 # Loads the stopwords
 root_path = os.getcwd()
-stop_words = stopwords.words('english')
-lemmatizer = WordNetLemmatizer()
-
-def tokenizer(text):
-	tokenized = [lemmatizer.lemmatize(word) for word in text.split() if word not in stop_words]
-	return tokenized
-
-def preprocessor(text):
-	text = re.sub('<[^>]*>', '', text).lower()
-	text = cleaner.expandContractions(text)
-	text = re.sub('[\W]+', ' ', text.lower())
-	return text
 
 # reads in and returns one document at a time:
 def stream_docs(path):
